@@ -1,32 +1,36 @@
 <?php
 
-namespace App\Services\v1;
+namespace App\Filters\v1;
 
 use Illuminate\Http\Request;
+use App\Filters\ApiFilter;
 
-class CustomerQuery {
+
+class InvoicesFilter extends ApiFilter {
+
     private $safeParams = [
-        'name' => ['eq'],
-        'type' => ['eq'],
-        'email' => ['eq'],
-        'address' => ['eq'],
-        'city' => ['eq'],
-        'state' => ['eq'],
-        'postalCode' => ['eq', 'gt', 'lt']
+        'customerId' => ['eq'],
+        'amount' => ['eq', 'gt', 'lt','lte','gte'],
+        'status' => ['eq','ne'],
+        'billedDate' => ['eq', 'gt', 'lt','lte','gte'],
+        'paidDate' => ['eq', 'gt', 'lt','lte','gte']
     ];
 
     private $columnMap = [
-        'postalCode' => 'postal_code'
+        'customerId' => 'customer_id',
+        'billedDate' => 'billed_date',
+        'paidDate' => 'paid_date'
     ];
 
     private $operatorMap = [
-        'eq' => '=',
-        'lt' => '<',
+        'eq'  => '=',
+        'lt'  => '<',
         'lte' => '<=',
-        'gt' => '>',
-        'gte' => '>='
+        'gt'  => '>',
+        'gte' => '>=',
+        'ne'  => '!='
     ];
-
+    
     public function transform(Request $request) {
         $eloQuery = [];
 
@@ -48,4 +52,5 @@ class CustomerQuery {
 
         return $eloQuery;
     }
+
 }
